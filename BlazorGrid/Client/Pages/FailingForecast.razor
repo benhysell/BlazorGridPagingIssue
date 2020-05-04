@@ -1,0 +1,28 @@
+﻿@page "/failingForecast"
+@using BlazorGrid.Shared
+@inject HttpClient Http
+
+<h1>Navigating away and back to this page, i.e. to Counter and watch odata call to backend</h1>
+<h2>Note the grid's Page is set correctly</h2>
+<h2>However the data is from page 1</h2>
+
+<TelerikGrid Data=@_weatherForecast
+             Pageable="true"
+             Sortable="true"
+             PageSize="5"
+             TotalCount=@_count
+             OnRead=@ReadItems
+             OnStateInit="@((GridStateEventArgs<BlazorGrid.Shared.WeatherForecast> args) => OnStateInitHandlerAsync(nameof(FailingForecast), args))"
+             OnStateChanged="@((GridStateEventArgs<BlazorGrid.Shared.WeatherForecast> args) => OnStateChangedHandlerAsync(nameof(FailingForecast), args))">
+    <GridColumns>
+        <GridColumn Field="Date" Title="Date" />
+        <GridColumn Field="TemperatureC" Title="TemperatureC" />
+        <GridColumn Field="Summary" Title="Summary" />
+    </GridColumns>
+</TelerikGrid>
+
+
+@code {
+
+
+}
