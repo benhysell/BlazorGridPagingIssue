@@ -32,7 +32,9 @@ namespace BlazorGrid.Server.Controllers
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
+                Summary = Summaries[rng.Next(Summaries.Length)],
+                BadWeather = true
+                
             })
             .ToArray();
         }

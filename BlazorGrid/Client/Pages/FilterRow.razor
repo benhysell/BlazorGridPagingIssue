@@ -1,0 +1,30 @@
+﻿@page "/filterRow"
+@using BlazorGrid.Shared
+@inject HttpClient Http
+
+<h1>Filter Row -- Works as Expected</h1>
+
+
+
+<TelerikGrid Data=@_weatherForecast
+             Pageable="true"
+             Sortable="true"
+             PageSize="5"
+             FilterMode="GridFilterMode.FilterRow"
+             TotalCount=@_count
+             OnRead="@((GridReadEventArgs args) => ReadItemsODataAsync("FilterRow", args))"
+             OnStateInit="@((GridStateEventArgs<BlazorGrid.Shared.WeatherForecast> args) => OnStateInitHandlerAsync("FilterRow", args))"
+             OnStateChanged="@((GridStateEventArgs<BlazorGrid.Shared.WeatherForecast> args) => OnStateChangedHandlerAsync("FilterRow", args))">
+    <GridColumns>
+        <GridColumn Field="Date" Title="Date" />
+        <GridColumn Field="TemperatureC" Title="TemperatureC" />
+        <GridColumn Field="Summary" Title="Summary" />
+        <GridColumn Field="BadWeather" Title="Bad Weather" />
+    </GridColumns>
+</TelerikGrid>
+
+
+@code {
+
+
+}

@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 using Serilog;
 using Telerik.Blazor.Components;
 using Telerik.Blazor.Extensions;
+using Blazored.LocalStorage;
 
 namespace BlazorGrid.Client.Pages
 {
     public partial class FailingForecast
     {
         /// <summary>
-        /// Telerik Storage
+        /// Local Storage
         /// </summary>
-        [Inject] public TelerikLocalStorage TelerikLocalStorage { get; set; }
+        [Inject] public ILocalStorageService LocalStorage { get; set; }
 
         /// <summary>
         /// http client
@@ -53,7 +54,7 @@ namespace BlazorGrid.Client.Pages
             Log.Information("ReadItems Start");            
             
             //query local storage for state of grid
-            var args2 = await TelerikLocalStorage.GetItemAsync<GridState<BlazorGrid.Shared.WeatherForecast>>(nameof(FailingForecast));           
+            var args2 = await LocalStorage.GetItemAsync<GridState<BlazorGrid.Shared.WeatherForecast>>(nameof(FailingForecast)); 
             Log.Information($"ReadItems request page: {args.Request.Page} saved state page: {args2?.Page.Value}");            
            
             //make request to backend
@@ -82,8 +83,8 @@ namespace BlazorGrid.Client.Pages
         {
             try
             {
-                Log.Information($"OnStateInitHandlerAsync Start");
-                var state = await TelerikLocalStorage.GetItemAsync<GridState<BlazorGrid.Shared.WeatherForecast>>(nameOfElement);
+                Log.Information($"OnStateInitHandlerAsync Start");                
+                var state = await LocalStorage.GetItemAsync<GridState<BlazorGrid.Shared.WeatherForecast>>(nameOfElement);
                 if (null != state)
                 {
                     args.GridState = state;
@@ -108,8 +109,8 @@ namespace BlazorGrid.Client.Pages
         {
             Log.Information($"OnStateChangedHandlerAsync Save State Start");
             if (!_firstCallOnStateChanged)
-            {
-                await TelerikLocalStorage.SetItem(nameOfElement, args.GridState);
+            {                
+                await LocalStorage.SetItemAsync(nameOfElement, args.GridState);
             }
             else
             {

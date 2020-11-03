@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Serilog.Debugging;
 using Serilog;
 using BlazorGrid.Client.Utilities;
+using Blazored.LocalStorage;
 
 namespace BlazorGrid.Client
 {
@@ -31,7 +32,7 @@ namespace BlazorGrid.Client
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddTelerikBlazor();
-            builder.Services.AddTelerikLocalStorage();
+            builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

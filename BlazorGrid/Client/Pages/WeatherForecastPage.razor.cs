@@ -1,4 +1,6 @@
-﻿using BlazorGrid.Client.Utilities;
+﻿using Blazored.LocalStorage;
+using BlazorGrid.Client.Utilities;
+using BlazorGrid.Shared;
 using Microsoft.AspNetCore.Components;
 using Serilog;
 using System;
@@ -12,12 +14,12 @@ using Telerik.Blazor.Extensions;
 
 namespace BlazorGrid.Client.Pages
 {
-    public partial class WeatherForecast
+    public partial class WeatherForecastPage
     {
         /// <summary>
         /// Telerik Storage
         /// </summary>
-        [Inject] public TelerikLocalStorage TelerikLocalStorage { get; set; }
+        [Inject] public ILocalStorageService LocalStorage { get; set; }
 
         /// <summary>
         /// http client
@@ -98,8 +100,8 @@ namespace BlazorGrid.Client.Pages
         {
             try
             {
-                Log.Information($"OnStateInitHandlerAsync Start");
-                var state = await TelerikLocalStorage.GetItemAsync<GridState<BlazorGrid.Shared.WeatherForecast>>(nameOfElement);
+                Log.Information($"OnStateInitHandlerAsync Start");                
+                var state = await LocalStorage.GetItemAsync<GridState<BlazorGrid.Shared.WeatherForecast>>(nameOfElement);
                 if (null != state)
                 {
                     args.GridState = state;
@@ -124,8 +126,8 @@ namespace BlazorGrid.Client.Pages
         {
             Log.Information($"OnStateChangedHandlerAsync Save State Start");
             if (!_firstCallOnStateChanged)
-            {                
-                await TelerikLocalStorage.SetItem(nameOfElement, args.GridState);
+            {                                
+                await LocalStorage.SetItemAsync(nameOfElement, args.GridState);
             }
             else
             {

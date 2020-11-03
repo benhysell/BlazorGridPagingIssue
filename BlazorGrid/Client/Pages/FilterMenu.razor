@@ -1,0 +1,30 @@
+﻿@page "/filterMenu"
+@using BlazorGrid.Shared
+@inject HttpClient Http
+
+<h1>Filter Menu -- Fails</h1>
+
+
+
+<TelerikGrid Data=@_weatherForecast
+             Pageable="true"
+             Sortable="true"
+             PageSize="5"
+             FilterMode="GridFilterMode.FilterMenu"
+             TotalCount=@_count
+             OnRead="@((GridReadEventArgs args) => ReadItemsODataAsync("FilterMenu", args))"
+             OnStateInit="@((GridStateEventArgs<BlazorGrid.Shared.WeatherForecast> args) => OnStateInitHandlerAsync("FilterMenu", args))"
+             OnStateChanged="@((GridStateEventArgs<BlazorGrid.Shared.WeatherForecast> args) => OnStateChangedHandlerAsync("FilterMenu", args))">
+    <GridColumns>
+        <GridColumn Field="Date" Title="Date" />
+        <GridColumn Field="TemperatureC" Title="TemperatureC" />
+        <GridColumn Field="Summary" Title="Summary" />
+        <GridColumn Field="BadWeather" Title="Bad Weather" />
+    </GridColumns>
+</TelerikGrid>
+
+
+@code {
+
+
+}

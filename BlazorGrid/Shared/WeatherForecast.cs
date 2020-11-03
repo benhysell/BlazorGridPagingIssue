@@ -5,7 +5,7 @@ using System.Text;
 namespace BlazorGrid.Shared
 {
     public class WeatherForecast
-    {
+    {        
         public DateTime Date { get; set; }
 
         public int TemperatureC { get; set; }
@@ -13,5 +13,7 @@ namespace BlazorGrid.Shared
         public string Summary { get; set; }
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+        public bool BadWeather { get; set; }
     }
 }

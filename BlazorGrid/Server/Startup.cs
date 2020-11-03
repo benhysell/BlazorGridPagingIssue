@@ -68,7 +68,7 @@ namespace BlazorGrid.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, VersionedODataModelBuilder modelBuilder)
         {
             if (env.IsDevelopment())
             {
@@ -96,15 +96,15 @@ namespace BlazorGrid.Server
                 endpoints.Count().Filter().OrderBy().Select().MaxTop(null).Expand();
                 endpoints.ServiceProvider.GetRequiredService<ODataOptions>().UrlKeyDelimiter = Microsoft.OData.ODataUrlKeyDelimiter.Parentheses;
                 //endpoints.MapODataRoute("odata", "odata/v{version:apiVersion}", GetEdmModel());
-                endpoints.MapODataRoute("odata", "odata/v{version:apiVersion}", GetEdmModel()); 
+                endpoints.MapODataRoute("odata", "odata/v{version:apiVersion}", modelBuilder.GetEdmModels().Last()); 
 
             });
         }
 
         IEdmModel GetEdmModel()
         {
-            var builder = new ODataConventionModelBuilder();
-            builder.EntitySet<WeatherForecast>("WeatherForecastOData").EntityType.HasKey(o => o.Date);            
+            var builder = new ODataModelBuilder();
+            builder.EntitySet<WeatherForecast>("WeatherForecastOData");//.EntityType.HasKey(o => o.Date);            
             return builder.GetEdmModel();
         }
     }
