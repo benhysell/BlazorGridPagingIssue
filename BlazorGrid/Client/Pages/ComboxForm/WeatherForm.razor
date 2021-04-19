@@ -1,0 +1,34 @@
+﻿
+
+<EditForm Model="@FormElement" OnValidSubmit="HandleValidSubmitAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="Name">Comment</label>
+        <InputText class="form-control" Id="Name" @bind-Value="FormElement.Comment" />
+        <ValidationMessage class="invalid-feedback" For="@(() => FormElement.Comment)" />
+    </div>
+    <div class="form-group">
+        <label for=@nameof(FormElement.Temp)>OData Weather Forecasts</label>
+        <TelerikComboBox Data="@_weatherForecasts"
+                         OnRead="@OnReadAsync"
+                         Filterable="true"
+                         @bind-Value="@FormElement.Temp"
+                         Width="inherit"
+                         TextField="Summary"
+                         ValueField="TemperatureC"
+                         ClearButton="false"
+                         Id=@nameof(FormElement.Temp)
+                         Class="form-control"
+                         FilterOperator=Telerik.Blazor.StringFilterOperator.Contains>
+        </TelerikComboBox>
+        <ValidationMessage class="invalid-feedback" For="@(() => FormElement.Temp)" />
+    </div>
+
+
+</EditForm>
+
+@code {
+
+
+}

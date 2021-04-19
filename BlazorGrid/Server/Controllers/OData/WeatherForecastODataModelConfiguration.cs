@@ -15,14 +15,14 @@ namespace BlazorGrid.Server.Controllers.OData
         /// </summary>
         /// <param name="builder">The <see cref="ODataModelBuilder">builder</see> used to apply configurations.</param>
         /// <param name="apiVersion">The <see cref="ApiVersion">API version</see> associated with the <paramref name="builder"/>.</param>
-        public void Apply(ODataModelBuilder builder, ApiVersion apiVersion)
+        public void Apply(ODataModelBuilder builder, ApiVersion apiVersion, string routePrefix)
         {
             //allows us to version the entity used as well
 
             //map entity to name of controller without 'controller'
             //var order = builder.EntitySet<BasePartNumberDto>("BasePartNumberOData");//                .EntityType.HasKey(o => o.Id);
 
-            builder.EntitySet<WeatherForecast>("WeatherForecastOData").EntityType.HasKey(x=>x.Date);
+            builder.EntitySet<WeatherForecast>("WeatherForecastOData").EntityType.HasKey(x=>x.TemperatureC);
 
             //if (apiVersion < ApiVersions.V2)
             //{

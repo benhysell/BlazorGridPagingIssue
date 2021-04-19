@@ -13,6 +13,8 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using BlazorGrid.Shared;
 using Microsoft.OData.Edm;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace BlazorGrid.Server
 {
@@ -31,40 +33,27 @@ namespace BlazorGrid.Server
         {
             services.AddControllers();
 
-            services.AddVersionedApiExplorer(
-                options =>
-                {
-                    options.GroupNameFormat = "'v'VVV";
-
-                    // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
-                    // can also be used to control the format of the API version in route templates
-                    options.SubstituteApiVersionInUrl = true;
-                });
-
-            services.AddApiVersioning(o =>
-            {
-                //o.ReportApiVersions = true;
-                o.AssumeDefaultVersionWhenUnspecified = true;
-                //o.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
-                //o.Conventions.Controller<PartNumberODataController>()..HasApiVersion(new ApiVersion(2,0)).
-            }
-               );
-
-            services.AddOData().EnableApiVersioning();
-            // Workaround: https://github.com/OData/WebApi/issues/1177            
-            services.AddMvcCore(options =>
-            {
-                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-                {
-                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-                }
-                foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-                {
-                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-                }
-            });
-
             
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+            }
+           );
+            services.AddOData().EnableApiVersioning();
+            services.AddODataApiExplorer(
+          options =>
+          {
+                  // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                  // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                  options.GroupNameFormat = "'v'VVV";
+
+                  // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                  // can also be used to control the format of the API version in route templates
+                  options.SubstituteApiVersionInUrl = true;
+          });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,12 +80,12 @@ namespace BlazorGrid.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.EnableDependencyInjection();                
+                endpoints.EnableDependencyInjection();
+                endpoints.Map("api/{**slug}", HandleApiFallback);                
                 endpoints.MapFallbackToFile("index.html");
                 endpoints.Count().Filter().OrderBy().Select().MaxTop(null).Expand();
-                endpoints.ServiceProvider.GetRequiredService<ODataOptions>().UrlKeyDelimiter = Microsoft.OData.ODataUrlKeyDelimiter.Parentheses;
-                //endpoints.MapODataRoute("odata", "odata/v{version:apiVersion}", GetEdmModel());
-                endpoints.MapODataRoute("odata", "odata/v{version:apiVersion}", modelBuilder.GetEdmModels().Last()); 
+                endpoints.ServiceProvider.GetRequiredService<ODataOptions>().UrlKeyDelimiter = Microsoft.OData.ODataUrlKeyDelimiter.Parentheses;                
+                endpoints.MapVersionedODataRoute("odata", "odata/v{version:apiVersion}", modelBuilder); //this 'should' build up all of our odata end points, code left above to grab the rest.  Not sure why this returns more than 1
 
             });
         }
@@ -106,6 +95,17 @@ namespace BlazorGrid.Server
             var builder = new ODataModelBuilder();
             builder.EntitySet<WeatherForecast>("WeatherForecastOData");//.EntityType.HasKey(o => o.Date);            
             return builder.GetEdmModel();
+        }
+
+        /// <summary>
+        /// return 404 when route not found for backend
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private Task HandleApiFallback(HttpContext context)
+        {
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+            return Task.FromResult(0);
         }
     }
 }
