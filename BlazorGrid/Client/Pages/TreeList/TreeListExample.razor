@@ -1,0 +1,24 @@
+﻿@page "/TreeListExample"
+
+<h1>Tree List Example</h1>
+
+<TelerikTreeList Data="@TreeListItems"
+                 IdField="Id"
+                 ParentIdField="ParentId"
+                 Pageable="true"
+                 Sortable="true"
+                 FilterMode="@TreeListFilterMode.FilterMenu"
+                 Resizable="true" Reorderable="false"
+                 OnStateChanged="@((TreeListStateEventArgs<TreeListItemDto> args) => OnStateChangedHandler(args))"
+                 OnStateInit="@((TreeListStateEventArgs<TreeListItemDto> args) => OnStateInitHandler(args))">
+    <TreeListColumns>
+        <TreeListColumn Expandable="true" Field="Name" Width="400px"></TreeListColumn>
+        <TreeListColumn Field="Description" Width="200px"></TreeListColumn>        
+    </TreeListColumns>
+</TelerikTreeList>
+
+
+@code {
+
+
+}
