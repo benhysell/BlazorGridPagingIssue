@@ -5,12 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.5" />    
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.5" PrivateAssets="all" />
+    <PackageReference Include="Blazored.LocalStorage" Version="4.1.2" />
+    <PackageReference Include="BlazorStrap" Version="1.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.7" />    
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.7" PrivateAssets="all" />    
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
-    <PackageReference Include="Telerik.UI.for.Blazor" Version="2.23.0" />
-    <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0-dev-00019" />
+    <PackageReference Include="Telerik.UI.for.Blazor" Version="2.24.0" />
+    <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />
     <PackageReference Include="Serilog.Sinks.BrowserHttp" Version="1.0.0-dev-00021" />
   </ItemGroup>
 

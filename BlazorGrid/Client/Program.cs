@@ -12,6 +12,7 @@ using Serilog;
 using BlazorGrid.Client.Utilities;
 using Blazored.LocalStorage;
 using Serilog.Core;
+using BlazorStrap;
 
 namespace BlazorGrid.Client
 {
@@ -39,8 +40,8 @@ namespace BlazorGrid.Client
             builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddTelerikBlazor();
             builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddBootstrapCss();
 
-            
 
             await builder.Build().RunAsync();
         }

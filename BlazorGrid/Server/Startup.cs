@@ -15,6 +15,7 @@ using BlazorGrid.Shared;
 using Microsoft.OData.Edm;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorGrid.Server
 {
@@ -31,9 +32,10 @@ namespace BlazorGrid.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddNewtonsoftJson();
 
-            
+
+
             services.AddApiVersioning(options =>
             {
                 options.ReportApiVersions = true;
@@ -86,15 +88,7 @@ namespace BlazorGrid.Server
                 endpoints.Count().Filter().OrderBy().Select().MaxTop(null).Expand();
                 endpoints.ServiceProvider.GetRequiredService<ODataOptions>().UrlKeyDelimiter = Microsoft.OData.ODataUrlKeyDelimiter.Parentheses;                
                 endpoints.MapVersionedODataRoute("odata", "odata/v{version:apiVersion}", modelBuilder); //this 'should' build up all of our odata end points, code left above to grab the rest.  Not sure why this returns more than 1
-
             });
-        }
-
-        IEdmModel GetEdmModel()
-        {
-            var builder = new ODataModelBuilder();
-            builder.EntitySet<WeatherForecast>("WeatherForecastOData");//.EntityType.HasKey(o => o.Date);            
-            return builder.GetEdmModel();
         }
 
         /// <summary>
@@ -109,3 +103,4 @@ namespace BlazorGrid.Server
         }
     }
 }
+

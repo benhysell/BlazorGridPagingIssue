@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BlazorGrid.Shared
 {
-    public class WeatherForecast
+    public class WeatherForecast : BaseWeatherForecast
     {        
         public DateTime Date { get; set; }
 

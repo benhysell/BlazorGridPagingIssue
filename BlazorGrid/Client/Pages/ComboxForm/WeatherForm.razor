@@ -21,10 +21,61 @@
                          Id=@nameof(FormElement.Temp)
                          Class="form-control"
                          FilterOperator=Telerik.Blazor.StringFilterOperator.Contains>
+            <ItemTemplate Context="dropDownContext">
+                @{var element = dropDownContext as BlazorGrid.Shared.WeatherForecast;}
+                <BSContainer>
+                    <BSRow>
+                        <BSCol XS="4">
+                            @element.Date
+                        </BSCol>
+                        <BSCol XS="4">
+                            <div class="float-right">
+                                Temp C -> @element.TemperatureC
+                            </div>
+                        </BSCol>
+                        <BSCol XS="4">
+                            <div class="float-right">
+                                Temp K -> @element.TemperatureK
+                            </div>
+                        </BSCol>
+                    </BSRow>
+                </BSContainer>
+            </ItemTemplate>
         </TelerikComboBox>
         <ValidationMessage class="invalid-feedback" For="@(() => FormElement.Temp)" />
     </div>
 
+    <div class="form-group">
+        <label for=@nameof(FormElement.UserId)>OData User</label>
+        <TelerikComboBox Data="@_users"
+                         OnRead="@OnReadUserAsync"
+                         Filterable="true"
+                         @bind-Value="@FormElement.UserId"
+                         Width="inherit"
+                         TextField="Name"
+                         ValueField="Id"
+                         ClearButton="false"
+                         Id=@nameof(FormElement.UserId)
+                         Class="form-control"
+                         FilterOperator=Telerik.Blazor.StringFilterOperator.Contains>
+            <ItemTemplate Context="dropDownContext">
+                @{var element = dropDownContext as BlazorGrid.Shared.User;}
+                <BSContainer>
+                    <BSRow>
+                        <BSCol XS="6">
+                            @element.Name
+                        </BSCol>
+                        <BSCol XS="6">
+                            <div class="float-right">
+                                Email -> @element.Email
+                            </div>
+                        </BSCol>                        
+                    </BSRow>
+                </BSContainer>
+            </ItemTemplate>
+        </TelerikComboBox>
+        <ValidationMessage class="invalid-feedback" For="@(() => FormElement.Temp)" />
+    </div>
 
 </EditForm>
 

@@ -22,7 +22,7 @@ namespace BlazorGrid.Server.Controllers.OData
 
             for (int i = 0; i < 50; i++)
             {
-                var newForeforcast = new WeatherForecast() { Date = startDate.AddHours(i), Summary = $"summary {i}", TemperatureC = i, BadWeather = i % 2 == 0 };
+                var newForeforcast = new WeatherForecast() { Date = startDate.AddHours(i), Summary = $"summary {i}", TemperatureC = i, BadWeather = i % 2 == 0, TemperatureK = (i + 273).ToString() };
                 weatherForecasts.Add(newForeforcast);
             }
 
