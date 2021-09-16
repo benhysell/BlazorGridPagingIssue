@@ -150,6 +150,12 @@ app {
     }
 }
 
+.k-combobox.form-control {
+    padding: 0;
+    border-width: 0;
+    display: flex;
+}
+
 @media (min-width: 768px) {
     app {
         flex-direction: row;

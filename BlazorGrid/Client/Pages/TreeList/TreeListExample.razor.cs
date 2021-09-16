@@ -54,7 +54,7 @@ namespace BlazorGrid.Client.Pages.TreeList
                     ExpandedItems = new List<TreeListItemDto>()
                 };
             }
-            Log.Warning($"Tree State {localStorage.ExpandedItems.Count()}");
+            //Log.Warning($"Tree State {localStorage.ExpandedItems.Count()}");
             args.TreeListState = localStorage;
         }
 
