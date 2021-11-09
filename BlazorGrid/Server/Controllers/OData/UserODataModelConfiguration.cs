@@ -1,6 +1,6 @@
 ﻿using BlazorGrid.Shared;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OData.ModelBuilder;
 using System;
 using System.Collections.Generic;
 using System.Linq;

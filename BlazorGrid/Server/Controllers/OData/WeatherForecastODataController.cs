@@ -1,6 +1,7 @@
 ﻿using BlazorGrid.Shared;
-using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,7 @@ namespace BlazorGrid.Server.Controllers.OData
     [ApiVersion("1.0")]
     public class WeatherForecastODataController : ODataController
     {
-        [EnableQuery]
-        [ProducesResponseType(typeof(ODataValue<IEnumerable<WeatherForecast>>), Status200OK)]
+        [EnableQuery]        
         public IQueryable<WeatherForecast> Get()
         {
             //normally goto a database, for now we'll generate data

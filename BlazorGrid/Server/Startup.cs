@@ -6,16 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Formatter;
+
 using Microsoft.Net.Http.Headers;
-using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Builder;
 using BlazorGrid.Shared;
 using Microsoft.OData.Edm;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData;
 
 namespace BlazorGrid.Server
 {
@@ -32,7 +30,21 @@ namespace BlazorGrid.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddNewtonsoftJson();
+            var controllerSetup = services.AddControllers(config =>
+            {                                
+                config.MaxIAsyncEnumerableBufferLimit = int.MaxValue;
+            }
+                    ).AddNewtonsoftJson();
+            controllerSetup.AddOData(options => options
+.Select()
+.Filter()
+.Expand()
+.SetMaxTop(null)
+.Count()
+.OrderBy()
+.AddRouteComponents("odata/v1", BuildODataEdm.BuildV1Model())
+.UrlKeyDelimiter = Microsoft.OData.ODataUrlKeyDelimiter.Parentheses
+);
 
 
 
@@ -42,24 +54,22 @@ namespace BlazorGrid.Server
                 options.AssumeDefaultVersionWhenUnspecified = true;
             }
            );
-            services.AddOData().EnableApiVersioning();
-            services.AddODataApiExplorer(
-          options =>
-          {
-                  // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
-                  // note: the specified format code will format the version as "'v'major[.minor][-status]"
-                  options.GroupNameFormat = "'v'VVV";
+            services.AddVersionedApiExplorer(options =>
+            {
+                // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                options.GroupNameFormat = "'v'VVV";
 
-                  // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
-                  // can also be used to control the format of the API version in route templates
-                  options.SubstituteApiVersionInUrl = true;
-          });
+                // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                // can also be used to control the format of the API version in route templates
+                options.SubstituteApiVersionInUrl = true;
+            });
 
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, VersionedODataModelBuilder modelBuilder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -81,13 +91,10 @@ namespace BlazorGrid.Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.EnableDependencyInjection();
-                endpoints.Map("api/{**slug}", HandleApiFallback);                
-                endpoints.MapFallbackToFile("index.html");
-                endpoints.Count().Filter().OrderBy().Select().MaxTop(null).Expand();
-                endpoints.ServiceProvider.GetRequiredService<ODataOptions>().UrlKeyDelimiter = Microsoft.OData.ODataUrlKeyDelimiter.Parentheses;                
-                endpoints.MapVersionedODataRoute("odata", "odata/v{version:apiVersion}", modelBuilder); //this 'should' build up all of our odata end points, code left above to grab the rest.  Not sure why this returns more than 1
+                endpoints.MapControllers();                
+                endpoints.Map("api/{**slug}", HandleApiFallback);
+                endpoints.Map("odata/{**slug}", HandleApiFallback);
+                endpoints.MapFallbackToFile("index.html");                
             });
         }
 

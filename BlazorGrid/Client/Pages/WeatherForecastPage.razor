@@ -15,6 +15,7 @@
              OnStateInit="@((GridStateEventArgs<BlazorGrid.Shared.WeatherForecast> args) => OnStateInitHandlerAsync(nameof(WeatherForecast), args))"
              OnStateChanged="@((GridStateEventArgs<BlazorGrid.Shared.WeatherForecast> args) => OnStateChangedHandlerAsync(nameof(WeatherForecast), args))">
     <GridColumns>
+        <GridCheckboxColumn />
         <GridColumn Field="Date" Title="Date" />
         <GridColumn Field="TemperatureC" Title="TemperatureC" />
         <GridColumn Field="Summary" Title="Summary" />
